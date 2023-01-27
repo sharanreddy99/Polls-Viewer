@@ -1,28 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {% load static %}
+{% extends "polls/base.html" %}
 
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'polls/css/style.css' %}" />
-    <title>Polls App</title>
-  </head>
-  <body>
-    <h1>Welcome to Sample Polls Site</h1>
-    {% if latest_question_list %}
-    <ul>
-      {% for question in latest_question_list %}
-      <li>
-        <a href="{% url 'polls:detail' question.id %}"
-          >{{ question.question_text }}</a
-        >
-      </li>
+{% block mainbody %}
+      {% if latest_question_list %} {% for question in latest_question_list %}
+      {% if forloop.counter0|divisibleby:"4" %}
+        <div class="d-flex flex-row">
+      {% endif %}
+      <div class="p-2 m-2">
+        <div class="card shadow-sm" style="width: 18rem">
+          <div class="card-body pb-1">
+            <p class="card-text fw-bold">{{question.question_text}}</p>
+            <a
+              href="{% url 'polls:detail' question.id %}"
+              data-toggle="modal"
+              data-target="#exampleModal"
+              class="btn btn-success"
+              ><i class="fa-solid fa-reply"></i> &nbsp; Answer</a
+            >
+            <a
+              href="{% url 'polls:results' question.id %}"
+              data-toggle="modal"
+              data-target="#exampleModal"
+              class="btn btn-warning"
+              ><i class="fa-thin fa-square-poll-vertical"></i> &nbsp; Results</a
+            >
+          <hr />
+            <p
+              class="card-text mt-2 text-center"
+              style="font-size: 0.7em; font-weight: bold"
+            >
+              Published: {{question.pub_date}}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% if forloop.counter0|add:"1"|divisibleby:"4" %}
+        </div>  
+      {% elif forloop.counter == latest_question_list|length %}
+      </div>
+      {% endif %}
+      
       {% endfor %}
-    </ul>
     {% else %}
-    <p>No polls are available.</p>
+      <div class="col-3"></div>
+      <div class="col-6 mt-5">
+        <div class="alert alert-warning" role="alert">
+          Polls not found!!!
+        </div>
+    </div>
     {% endif %}
-  </body>
-</html>
+    </div>
+     
+    </div>
+  </div>
+{% endblock %}
