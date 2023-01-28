@@ -49,4 +49,89 @@
       </div>
     </div>
   {% endif %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-4"></div>
+      <div class="col-8">      
+      <nav aria-label="...">
+        <ul id = 'pagination_block' class="pagination">
+          <li class="page-item disabled">
+        </ul>
+      </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+      const attachNewNode = (parent, type, classes) => {
+        const node = document.createElement(type);
+        for(let i=0; i<classes.length; i++){
+          node.classList.add(classes[i]);
+        }
+        parent.appendChild(node);
+        return node;
+      }
+
+      const attachRedirectionNode = (parent, type, classes, text, paramsObj) => {
+        const node = document.createElement(type);
+        for(let i=0; i<classes.length; i++){
+          node.classList.add(classes[i]);
+        }
+        
+        const params = new URLSearchParams(paramsObj).toString();
+        node.href = `{% url 'polls:index' %}?${params}`;
+        node.tabIndex='-1';
+        node.innerHTML=text;
+        parent.appendChild(node);
+        return node;
+      }
+
+      const getQueryParams = (paramsObj) => {
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+          get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        const keys = Object.keys(paramsObj);
+        for(let i=0; i<keys.length; i++) {
+          paramsObj[keys[i]] = params[keys[i]];  
+        }
+
+        return paramsObj;
+      }
+
+      const buildQueryParams = (paramsObj, i) => {
+        paramsObj['offset'] = i*10;
+        paramsObj['limit'] = 10;
+        return paramsObj; 
+      }
+
+      const preparePagination = ()=>{
+        const total_count = JSON.parse('{{total_count}}');
+        let paramsObj = getQueryParams({'offset': undefined, 'limit': undefined, 'search': undefined});
+        const main = document.getElementById('pagination_block');
+      
+        if(paramsObj['offset'] === null) {
+          paramsObj['offset'] = 0;
+        }
+        if(paramsObj['limit'] === null) {
+          paramsObj['limit'] = 10;
+        }
+        if(paramsObj['search'] === null) {
+        }
+
+        let newParamsObj = {...paramsObj, offset: 0};
+        for(let i=0; i<(total_count/10); i++){
+          let classesList = ['page-item'];
+          if(i*10 == paramsObj['offset']){
+            classesList.push('active');
+          }
+          const child = attachNewNode(main, 'li', classesList);
+          attachRedirectionNode(child, 'a', ['page-link'], ""+(i+1), newParamsObj);
+          newParamsObj = buildQueryParams(newParamsObj, i + 1);
+        }
+        
+      }
+
+      window.onload = preparePagination
+  </script>
 {% endblock %}

@@ -2,6 +2,7 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.core import serializers
+
 import json
 from django.db import connection
 
@@ -17,13 +18,22 @@ def index(request: HttpRequest):
     limit = customutils.getInt(request.GET.get('limit', ''), 10)
     offset = customutils.getInt(request.GET.get('offset', ''), 0)
     search = request.GET.get('search', '')
+
     latest_question_list = Question.objects
-    if len(search) > 0:
+    if len(search) > 0 and search != 'null':
         latest_question_list = latest_question_list.filter(question_text__contains = search)
     
     latest_question_list = latest_question_list.order_by('-pub_date')[offset: offset + limit]
+    mycursor = connection.cursor()
+    mycursor.execute('SELECT count(*) as total_count from polls_question')
+    result = mycursor.fetchone()
+    total_count = 0
+    if len(result) > 0:
+        total_count = result[0]
+    
     return render(request, 'polls/index.html', {
         'latest_question_list': latest_question_list,
+        'total_count': total_count
     })
 
 
