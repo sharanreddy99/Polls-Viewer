@@ -11,6 +11,9 @@ python3 -m venv mysiteenv && \
 source mysiteenv/bin/activate && \
 cd mysite && \
 python3 -m pip install -r requirements.txt && \
+sudo mysql -uroot -proot < initdb.sql && \
+python3 manage.py migrate && \
+sudo mysql -uroot -proot < dummydata.sql && \
 export DJANGO_SECRET_KEY="django-insecure-#ab+12-35a_s(g07jpm9gzx(xk\*^vjnll$^ar2khe^7qq-t=5s" && \
 export ALLOWED_HOST=localhost && \
 export DB_NAME=pollsdb && \
