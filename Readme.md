@@ -12,13 +12,13 @@ source mysiteenv/bin/activate && \
 cd mysite && \
 python3 -m pip install -r requirements.txt && \
 sudo mysql -uroot -proot < initdb.sql && \
-python3 manage.py migrate && \
-sudo mysql -uroot -proot < dummydata.sql && \
 export DJANGO_SECRET_KEY="django-insecure-#ab+12-35a_s(g07jpm9gzx(xk\*^vjnll$^ar2khe^7qq-t=5s" && \
-export ALLOWED_HOST=localhost && \
+export ALLOWED_HOST=* && \
 export DB_NAME=pollsdb && \
 export DB_USERNAME=root && \
 export DB_PASSWORD=root && \
 export DB_HOST=127.0.0.1 && \
 export DB_PORT=3306 && \
-python manage.py runserver 0.0.0.0:8000
+python3 manage.py migrate && \
+sudo mysql -uroot -proot < dummydata.sql && \
+python3 manage.py runserver 0.0.0.0:8000
