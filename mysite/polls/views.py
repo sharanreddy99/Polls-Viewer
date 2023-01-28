@@ -85,7 +85,7 @@ def summary(request):
     totalVotes = sum(votes)
 
     mostVotedQuestion = max(result, key=lambda x: x[1].__int__())
-    mostVotedQuestion = '{0} - {1}'.format(mostVotedQuestion[0], mostVotedQuestion[1])
+    mostVotedQuestion = '{0} ({1})'.format(mostVotedQuestion[0], mostVotedQuestion[1])
     
     
     return render(request, 'polls/summary.html', {'questions': questions, 'votes': votes, 'totalQuestions': totalQuestions, 'totalVotes': totalVotes, 'mostVotedQuestion': mostVotedQuestion})
