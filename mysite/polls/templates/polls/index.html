@@ -106,7 +106,6 @@
       }
 
       const preparePagination = ()=>{
-        console.log('{{total_count|safe}}')
         const total_count = JSON.parse('{{total_count}}');
         let paramsObj = getQueryParams({'offset': undefined, 'limit': undefined, 'search': undefined});
         const main = document.getElementById('pagination_block');
