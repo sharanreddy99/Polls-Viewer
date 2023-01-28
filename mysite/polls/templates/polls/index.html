@@ -106,6 +106,7 @@
       }
 
       const preparePagination = ()=>{
+        console.log('{{total_count|safe}}')
         const total_count = JSON.parse('{{total_count}}');
         let paramsObj = getQueryParams({'offset': undefined, 'limit': undefined, 'search': undefined});
         const main = document.getElementById('pagination_block');
@@ -113,14 +114,10 @@
         if(paramsObj['offset'] === null) {
           paramsObj['offset'] = 0;
         }
-        if(paramsObj['limit'] === null) {
-          paramsObj['limit'] = 10;
-        }
-        if(paramsObj['search'] === null) {
-        }
-
+        
+        paramsObj['limit'] = 10;
         let newParamsObj = {...paramsObj, offset: 0};
-        for(let i=0; i<(total_count/10); i++){
+        for(let i=0; i<Math.floor(total_count/10); i++){
           let classesList = ['page-item'];
           if(i*10 == paramsObj['offset']){
             classesList.push('active');
