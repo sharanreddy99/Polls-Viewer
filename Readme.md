@@ -3,7 +3,7 @@
 sudo su && \
 apt-get update && \
 apt-get -y upgrade && \
-apt-get install -y python3-pip python3-venv libmysqlclient-dev mysql-server && \
+apt-get install -y git python3-pip python3-venv libmysqlclient-dev mysql-server && \
 git clone https://github.com/sharanreddy99/polls_viewer.git && \
 cd polls-viewer && \
 python3 -m venv mysiteenv && \
