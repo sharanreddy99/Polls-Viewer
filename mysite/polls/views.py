@@ -79,13 +79,19 @@ def summary(request):
     cursor.execute('SELECT temp.question_text as question_text, SUM(temp.votes) as total_votes FROM (SELECT q.question_text question_text, c.votes votes FROM polls_question q INNER JOIN polls_choice c ON q.id = c.question_id GROUP BY q.question_text, c.votes) temp GROUP BY temp.question_text;')
     
     result = cursor.fetchall()
-    totalQuestions = len(result)
-    questions = customutils.safeEscapeString(json.dumps([i[0] for i in result]))
-    votes = [i[1].__int__() for i in  result]
-    totalVotes = sum(votes)
+    questions = []
+    votes = []
+    totalQuestions = 0
+    totalVotes = 0
+    mostVotedQuestion = ''
 
-    mostVotedQuestion = max(result, key=lambda x: x[1].__int__())
-    mostVotedQuestion = '{0} ({1})'.format(mostVotedQuestion[0], mostVotedQuestion[1])
-    
+    if len(result) > 0:
+        totalQuestions = len(result)
+        questions = customutils.safeEscapeString(json.dumps([i[0] for i in result]))
+        votes = [i[1].__int__() for i in  result]
+        totalVotes = sum(votes)
+
+        mostVotedQuestion = max(result, key=lambda x: x[1].__int__())
+        mostVotedQuestion = '{0} ({1})'.format(mostVotedQuestion[0], mostVotedQuestion[1])
     
     return render(request, 'polls/summary.html', {'questions': questions, 'votes': votes, 'totalQuestions': totalQuestions, 'totalVotes': totalVotes, 'mostVotedQuestion': mostVotedQuestion})

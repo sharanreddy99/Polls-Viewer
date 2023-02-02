@@ -10,9 +10,9 @@ mydb = mysql.connector.connect(
   host=os.getenv('DB_HOST'),
   user=os.getenv('DB_USERNAME'),
   password=os.getenv('DB_PASSWORD'),
-  database=os.getenv('DB_NAME')
+  database=os.getenv('DB_NAME'),
+  ssl_disabled=True
 )
-
 def delete(*args):
     mycursor = mydb.cursor()
     mycursor.execute("delete from polls_choice")
@@ -66,6 +66,29 @@ def display(*args):
     myresult = mycursor.fetchall()
     for x in myresult:
         print(x)
+
+def executeFile(*args):
+    n = 1
+    fileName = ''
+
+    try:
+        if len(args) > 0:
+            if len(args) >= 1:
+                fileName = args[0]
+        
+        mycursor = mydb.cursor()
+        with open(fileName, 'r') as file:
+            for line in file.readlines():
+                    line = line.strip(' \n')
+                    print(line, len(line))
+                    if len(line) > 0:
+                        mycursor.execute(line)
+            
+            mydb.commit()
+            
+    except Exception as e:
+        print('Exception occured..', e)            
+
 
 if len(sys.argv) > 1:
     params    = "', '".join(sys.argv[2:])
