@@ -40,6 +40,6 @@ export DB_PORT=3306 && \\
 
 python3 manage.py migrate && \\
 
-sudo mysql -uroot -proot < dummydata.sql && \\
+python3 datagenerator.py executeFile dummydata.py && \\
 
 python3 manage.py runserver 0.0.0.0:8000
