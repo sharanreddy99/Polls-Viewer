@@ -16,6 +16,6 @@ services:
     volumes:
       - ./mysite/:/app
     ports:
-      - 4214:8000
+      - ${POLLS_VIEWER_PORT}:8000
     depends_on:
       - db
